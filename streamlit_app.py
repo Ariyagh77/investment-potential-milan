@@ -1,6 +1,28 @@
-
 import streamlit as st
 import pandas as pd
+
+# Load Data
+df = pd.read_csv('final_clustered_milan_data.csv')
+
+# فیلترها
+st.sidebar.header('Filter Properties')
+price_min, price_max = st.sidebar.slider('Price Range', int(df['price'].min()), int(df['price'].max()), (600000, 1200000))
+area_min, area_max = st.sidebar.slider('Area Range (sqm)', int(df['area_sqm'].min()), int(df['area_sqm'].max()), (60, 140))
+growth_options = st.sidebar.multiselect('Growth Cluster', df['growth_cluster'].unique(), default=list(df['growth_cluster'].unique()))
+
+# فیلتر کردن
+filtered_data = df[
+    (df['price'] >= price_min) &
+    (df['price'] <= price_max) &
+    (df['area_sqm'] >= area_min) &
+    (df['area_sqm'] <= area_max) &
+    (df['growth_cluster'].isin(growth_options))
+]
+
+# نمایش
+st.title('Filtered Properties')
+st.dataframe(filtered_data)
+
 
 # Load data
 df = pd.read_csv("final_clustered_milan_data.csv")
